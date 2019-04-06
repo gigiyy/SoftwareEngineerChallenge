@@ -1,0 +1,33 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/ebbypeter/Archimate-PlantUML/master/Archimate.puml
+
+Business_Service(Producers, "Producers")
+Grouping(KafkaCluster, "Kafka Cluster") {
+    Business_Service(Kafka1, "Kafka")
+    Business_Service(Kafka2, "Kafka")
+    Business_Service(Kafka3, "Replica")
+    Business_Service(Kafka4, "Historical Data")
+}
+Business_Service(InternalLB, "Internal Load Balance")
+Grouping(SubKafka1, "analytic worker") {
+    Business_Event(worker1, "sub-topic Kafka")
+    Business_Service(query1, "Query worker")
+}
+Grouping(SubKafka2, "analytic worker 2") {
+    Business_Event(worker2, "sub-topic Kafka")
+    Business_Service(query2, "Query worker")
+}
+Business_Service(QueryLB, "Query Load Balancer")
+
+Rel_Flow_Down(Producers, KafkaCluster, "events")
+Rel_Flow(KafkaCluster, InternalLB, "events")
+Rel_Flow_Down(InternalLB, SubKafka1, "sub topic events")
+Rel_Flow_Down(InternalLB, SubKafka2, "sub topic events")
+Rel_Flow_Down(SubKafka1, QueryLB, "analytic")
+Rel_Flow_Down(SubKafka2, QueryLB, "analytic")
+Rel_Flow_Up(QueryLB, SubKafka1, "query")
+Rel_Flow_Up(QueryLB, SubKafka2, "query")
+Rel_Flow(worker1, query1, "read")
+Rel_Flow(worker2, query2, "read")
+
+@enduml
