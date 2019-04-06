@@ -42,5 +42,5 @@
 * etcd/zookeeper or other distributed config storage can be used to configure the worker and load balance(know who is serving who).
 * overall design would be like below:
 
-![system architecture](../design.png)
+![system architecture](https://github.com/gigiyy/SoftwareEngineerChallenge/blob/master/design/design.png)
 
